@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>I-vents account verification</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width"/>
+</head>
+<body style="font-family: Georgia,Times,Times New Roman,serif;">
+<table style="border: 0; border-collapse: separate; border-spacing: 0;height: 100%; width: 100%;">
+    <tr>
+        <td style="vertical-align: top; align-content: center; background: url(https://i.imgur.com/eqgb4o2.png); background-size: cover;">
+            <table style="margin: 0 auto; border: 0; border-collapse: separate; border-spacing: 0; padding: 0; width: 580px">
+                <tr>
+                    <td style="padding: 15px;">
+                        <div>
+                            <img style="display: block; margin: 0 auto; opacity: 1;"
+                                 src="https://i.imgur.com/ZHNlLlm.png" alt="I-VENTS">
+                        </div>
+                        <h2 style="color: #313233;">Thank you for signing up to I-vents, the ultimate event app!</h2>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <p style="color: white;">In order to verify your account, we must make sure that this email
+                            belongs to you.
+                            The verification link below is valid for 1 day from the moment you receive this email.
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <a th:href="@{'http://localhost:8080/i-vents/api/v1/auth/verify/'+${tokenUuid}}">Please
+                                click this link
+                                to verify your
+                                account</a>
+                            <br>
+                            <br>
+                            <br>
+                            The I-vents team
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
