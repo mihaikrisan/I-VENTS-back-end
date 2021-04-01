@@ -29,10 +29,10 @@ public class UserProfile {
     @Column(name = "age", nullable = false)
     private int age;
 
-    @Column(name = "email", nullable = false, length = 45)
+    @Column(name = "email", nullable = false, length = 45, unique = true)
     private String email;
 
-    @Column(name = "phone_number", nullable = false, length = 45)
+    @Column(name = "phone_number", nullable = false, length = 45, unique = true)
     private String phoneNumber;
 
     @ElementCollection(fetch = FetchType.EAGER)

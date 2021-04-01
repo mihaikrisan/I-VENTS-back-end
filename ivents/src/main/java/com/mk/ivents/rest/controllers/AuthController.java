@@ -1,12 +1,10 @@
 package com.mk.ivents.rest.controllers;
 
-import com.mk.ivents.business.dtos.AuthenticationResponse;
-import com.mk.ivents.business.dtos.LoginRequest;
-import com.mk.ivents.business.dtos.RefreshTokenRequest;
-import com.mk.ivents.business.dtos.RegisterRequest;
+import com.mk.ivents.business.dtos.*;
 import com.mk.ivents.business.exceptions.InvalidRefreshTokenException;
 import com.mk.ivents.business.exceptions.InvalidVerificationTokenException;
-import com.mk.ivents.business.exceptions.UsernameAlreadyTakenException;
+import com.mk.ivents.business.exceptions.OldPasswordException;
+import com.mk.ivents.business.exceptions.SignupException;
 import com.mk.ivents.business.interfaces.AuthService;
 import com.mk.ivents.security.exceptions.KeyRetrievalException;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +22,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signUp(@Valid @RequestBody RegisterRequest registerRequest) throws UsernameAlreadyTakenException {
+    public ResponseEntity<String> signUp(@Valid @RequestBody RegisterRequest registerRequest) throws SignupException {
         authService.signUp(registerRequest);
 
         return ResponseEntity.ok("User registration successful");
@@ -39,14 +37,26 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> logIn(@Valid @RequestBody LoginRequest loginRequest) throws KeyRetrievalException {
-        AuthenticationResponse authenticationResponse = authService.logIn(loginRequest);
-
-        return ResponseEntity.ok(authenticationResponse);
+        return ResponseEntity.ok(authService.logIn(loginRequest));
     }
 
-    @PostMapping("refresh/token")
-    public ResponseEntity<AuthenticationResponse> refreshTokens(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) throws KeyRetrievalException, InvalidRefreshTokenException {
+    @PostMapping("/refresh/token")
+    public ResponseEntity<AuthenticationResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) throws KeyRetrievalException, InvalidRefreshTokenException {
         return ResponseEntity.ok(authService.refreshToken(refreshTokenRequest));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@Valid @RequestBody Email email) {
+        authService.forgotPassword(email.getEmailAddress());
+
+        return ResponseEntity.ok("Email for password reset sent");
+    }
+
+    @PostMapping("/reset-password/{resetCode}")
+    public ResponseEntity<String> resetPassword(@PathVariable String resetCode, @Valid @RequestBody Password newPassword) throws InvalidVerificationTokenException, OldPasswordException {
+        authService.resetPassword(resetCode, newPassword.getPassword());
+
+        return ResponseEntity.ok("Password reset successful");
     }
 
     @PostMapping("/logout")

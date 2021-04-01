@@ -9,6 +9,8 @@ import com.mk.ivents.persistence.models.UserProfile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional(readOnly = true)
 public class UserProfileServiceImpl implements UserProfileService {
@@ -35,5 +37,19 @@ public class UserProfileServiceImpl implements UserProfileService {
         userProfile.setId(userProfileId);
 
         return save(userProfile);
+    }
+
+    @Override
+    public boolean isEmailAlreadyTaken(String email) {
+        Optional<UserProfile> userProfileOptional = userProfileRepository.findByEmail(email);
+
+        return userProfileOptional.isPresent();
+    }
+
+    @Override
+    public boolean isPhoneNumberAlreadyTaken(String phoneNumber) {
+        Optional<UserProfile> userProfileOptional = userProfileRepository.findByPhoneNumber(phoneNumber);
+
+        return userProfileOptional.isPresent();
     }
 }
