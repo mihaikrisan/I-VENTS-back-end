@@ -1,9 +1,6 @@
 package com.mk.ivents.rest.exceptionhandling;
 
-import com.mk.ivents.business.exceptions.InvalidRefreshTokenException;
-import com.mk.ivents.business.exceptions.InvalidVerificationTokenException;
-import com.mk.ivents.business.exceptions.NotFoundException;
-import com.mk.ivents.business.exceptions.UsernameAlreadyTakenException;
+import com.mk.ivents.business.exceptions.*;
 import com.mk.ivents.security.exceptions.KeyRetrievalException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,10 +49,9 @@ public class ControllerExceptionHandler {
         return ResponseEntity.badRequest().body("Unprocessable input data");
     }
 
-    @ExceptionHandler(value = UsernameAlreadyTakenException.class)
-    public ResponseEntity<String> handleUsernameAlreadyTakenException
-            (UsernameAlreadyTakenException usernameAlreadyTakenException) {
-        return new ResponseEntity<>(usernameAlreadyTakenException.getMessage(), HttpStatus.CONFLICT);
+    @ExceptionHandler(value = SignupException.class)
+    public ResponseEntity<String> handleSignUpException(SignupException signUpException) {
+        return new ResponseEntity<>(signUpException.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(value = NotFoundException.class)
@@ -73,6 +69,12 @@ public class ControllerExceptionHandler {
     public ResponseEntity<String> handleInvalidRefreshTokenException
             (InvalidRefreshTokenException invalidRefreshTokenException) {
         return ResponseEntity.badRequest().body(invalidRefreshTokenException.getMessage());
+    }
+
+    @ExceptionHandler(value = OldPasswordException.class)
+    public ResponseEntity<String> handleOldPasswordException
+            (OldPasswordException oldPasswordException) {
+        return ResponseEntity.badRequest().body(oldPasswordException.getMessage());
     }
 
     @ExceptionHandler(value = KeyRetrievalException.class)

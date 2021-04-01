@@ -41,6 +41,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findByEmail(String email) throws NotFoundException {
+        Optional<User> userOptional = userRepository.findByUserProfile_Email(email);
+
+        return userOptional.orElseThrow(() -> new NotFoundException("Did not find user with email '"
+                + email + "'"));
+    }
+
+    @Override
     @Transactional
     public User save(User user) {
         return userRepository.save(user);
@@ -64,5 +72,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserProfile getUserProfile(int userId) throws NotFoundException {
         return findById(userId).getUserProfile();
+    }
+
+    @Override
+    public boolean isUsernameAlreadyTaken(String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+
+        return userOptional.isPresent();
     }
 }

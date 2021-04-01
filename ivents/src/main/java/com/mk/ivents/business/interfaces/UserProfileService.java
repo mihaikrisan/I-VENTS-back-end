@@ -7,4 +7,8 @@ public interface UserProfileService {
     UserProfile save(UserProfile user);
 
     UserProfile update(UserProfile userProfile, int userId) throws NotFoundException;
+
+    boolean isEmailAlreadyTaken(String email);
+
+    boolean isPhoneNumberAlreadyTaken(String phoneNumber);
 }

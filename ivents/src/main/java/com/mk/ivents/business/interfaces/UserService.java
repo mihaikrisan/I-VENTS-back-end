@@ -13,6 +13,8 @@ public interface UserService {
 
     User findByUsername(String username) throws NotFoundException;
 
+    User findByEmail(String email) throws NotFoundException;
+
     User save(User user);
 
     User update(User user, int userId) throws NotFoundException;
@@ -20,4 +22,6 @@ public interface UserService {
     void deleteById(int id);
 
     UserProfile getUserProfile(int userId) throws NotFoundException;
+
+    boolean isUsernameAlreadyTaken(String username);
 }
