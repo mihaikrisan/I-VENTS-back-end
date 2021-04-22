@@ -37,4 +37,8 @@ public class Event {
 
     @Column(name = "max_number_of_persons")
     private Integer maxNumberOfPersons;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
+    @JoinColumn(name = "position_id", nullable = false)
+    private Position position;
 }

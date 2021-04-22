@@ -4,7 +4,6 @@ import com.mk.ivents.business.exceptions.NotFoundException;
 import com.mk.ivents.business.interfaces.EventService;
 import com.mk.ivents.persistence.models.Event;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -21,7 +20,7 @@ public class EventRestController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ORGANIZER')")
+//    @PreAuthorize("hasAuthority('ORGANIZER')")
     public ResponseEntity<List<Event>> findAllEvents() {
         return ResponseEntity.ok(eventService.findAll());
     }
@@ -32,7 +31,7 @@ public class EventRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> addEvent(@RequestBody Event event) {
+    public ResponseEntity<Void> addEvent(@RequestBody Event event) {
         Event savedEvent = eventService.save(event);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(savedEvent.getId()).toUri();
