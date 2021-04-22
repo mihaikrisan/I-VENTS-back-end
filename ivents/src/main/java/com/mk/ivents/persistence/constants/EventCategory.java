@@ -14,7 +14,6 @@ public enum EventCategory {
     NIGHTLIFE,
     KIDS_AND_FAMILY,
     WORKSHOPS,
-    GALAS,
-    CEREMONY,
+    GALAS_AND_CEREMONIES,
     OTHER
 }
