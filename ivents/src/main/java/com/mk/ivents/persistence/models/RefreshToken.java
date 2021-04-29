@@ -22,6 +22,6 @@ public class RefreshToken {
     @Column(name = "token", nullable = false)
     private String token;
 
-    @Column(name = "created_on_utc")
+    @Column(name = "created_on_utc", nullable = false)
     private Instant createdTime;
 }

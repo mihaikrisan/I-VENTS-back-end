@@ -2,6 +2,7 @@ package com.mk.ivents.business.services;
 
 import com.mk.ivents.business.exceptions.NotFoundException;
 import com.mk.ivents.business.interfaces.UserService;
+import com.mk.ivents.persistence.interfaces.EventRepository;
 import com.mk.ivents.persistence.interfaces.UserRepository;
 import com.mk.ivents.persistence.models.User;
 import com.mk.ivents.persistence.models.UserProfile;
@@ -15,9 +16,11 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final EventRepository eventRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, EventRepository eventRepository) {
         this.userRepository = userRepository;
+        this.eventRepository = eventRepository;
     }
 
     @Override
@@ -80,4 +83,37 @@ public class UserServiceImpl implements UserService {
 
         return userOptional.isPresent();
     }
+
+    @Override
+    public boolean isEventFavorite(int userId, int eventId) throws NotFoundException {
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new NotFoundException("Did not find user with id '" + userId + "'"));
+
+        return user
+                .getFavoriteEvents()
+                .stream()
+                .anyMatch(event -> event.getId() == eventId);
+    }
+
+//    @Override
+//    @Transactional
+//    public void addFavoriteEvent(int userId, int eventId) throws NotFoundException {
+//        User user = userRepository.findById(userId).orElseThrow(() ->
+//                new NotFoundException("Did not find user with id '" + userId + "'"));
+//        Event event = eventRepository.findById(eventId).orElseThrow(() ->
+//                new NotFoundException("Did not find event with id '" + eventId + "'"));
+//
+//        user.getFavoriteEvents().add(event);
+//    }
+//
+//    @Override
+//    @Transactional
+//    public void deleteFavoriteEvent(int userId, int eventId) throws NotFoundException {
+//        User user = userRepository.findById(userId).orElseThrow(() ->
+//                new NotFoundException("Did not find user with id '" + userId + "'"));
+//        Event event = eventRepository.findById(eventId).orElseThrow(() ->
+//                new NotFoundException("Did not find event with id '" + eventId + "'"));
+//
+//        user.getFavoriteEvents().remove(event);
+//    }
 }

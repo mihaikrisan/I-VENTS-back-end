@@ -24,4 +24,10 @@ public interface UserService {
     UserProfile getUserProfile(int userId) throws NotFoundException;
 
     boolean isUsernameAlreadyTaken(String username);
+
+    boolean isEventFavorite(int userId, int eventId) throws NotFoundException;
+
+//    void addFavoriteEvent(int userId, int eventId) throws NotFoundException;
+//
+//    void deleteFavoriteEvent(int userId, int eventId) throws NotFoundException;
 }

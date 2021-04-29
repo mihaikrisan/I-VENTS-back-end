@@ -1,20 +1,24 @@
 package com.mk.ivents.business.interfaces;
 
+import com.mk.ivents.business.dtos.EventDto;
 import com.mk.ivents.business.exceptions.NotFoundException;
-import com.mk.ivents.persistence.models.Event;
 
 import java.util.List;
 
 public interface EventService {
-    List<Event> findAll();
+    List<EventDto> findAll();
 
-    Event findById(int id) throws NotFoundException;
+    EventDto findById(int id) throws NotFoundException;
 
-    Event save(Event event);
+    EventDto save(EventDto eventDto);
 
-    Event update(Event event, int eventId) throws NotFoundException;
+    EventDto update(EventDto eventDto, int eventId) throws NotFoundException;
 
     void deleteById(int id);
 
-    List<Event> findAllEventsBelongingToCategory(String eventCategory);
+    List<EventDto> findAllEventsBelongingToCategory(String eventCategory);
+
+    int getTotalNumberOfMostRecentPagesWithSize(int size);
+
+    List<EventDto> getMostRecentPage(int page, int size);
 }

@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @Getter
@@ -41,4 +43,38 @@ public class Event {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
     @JoinColumn(name = "position_id", nullable = false)
     private Position position;
+
+    @Column(name = "takes_place_on_utc", nullable = false)
+    private Instant takingPlaceTime;
+
+    @Column(name = "added_on_utc", nullable = false)
+    private Instant addedTime;
+
+    @Column(name = "image_url", nullable = false)
+    private String imageUrl;
+
+    @Column(name = "address", nullable = false)
+    private String address;
+
+    @Column(name = "description", nullable = false)
+    private String description;
+
+    @ManyToMany(mappedBy = "interestedInEvents")
+    private Set<User> usersInterested;
+
+    @ManyToMany(mappedBy = "goingToEvents")
+    private Set<User> usersGoing;
+
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        Event event = (Event) o;
+//        return getId() == event.getId();
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(getId());
+//    }
 }

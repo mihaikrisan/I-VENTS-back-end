@@ -36,7 +36,7 @@ public class UserRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> addUser(@RequestBody User user) {
+    public ResponseEntity<Void> addUser(@RequestBody User user) {
         User savedUser = userService.save(user);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(savedUser.getId()).toUri();
@@ -64,4 +64,23 @@ public class UserRestController {
             throws NotFoundException {
         return ResponseEntity.ok(userProfileService.update(userProfile, userId));
     }
+
+    @GetMapping("/{userId}/favorite-events/{eventId}")
+    public ResponseEntity<Void> isEventFavorite(@PathVariable int userId, @PathVariable int eventId) throws NotFoundException {
+        if (userService.isEventFavorite(userId, eventId)) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+//    @PutMapping("/{userId}/favorite-events/{eventId}")
+//    public void addFavoriteEvent(@PathVariable int userId, @PathVariable int eventId) throws NotFoundException {
+//        userService.addFavoriteEvent(userId, eventId);
+//    }
+
+//    @DeleteMapping("/{userId}/favorite-events/{eventId}")
+//    public void deleteFavoriteEvent(@PathVariable int userId, @PathVariable int eventId) throws NotFoundException {
+//        userService.deleteFavoriteEvent(userId, eventId);
+//    }
 }
