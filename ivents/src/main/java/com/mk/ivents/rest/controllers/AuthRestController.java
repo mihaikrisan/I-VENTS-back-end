@@ -1,10 +1,7 @@
 package com.mk.ivents.rest.controllers;
 
 import com.mk.ivents.business.dtos.*;
-import com.mk.ivents.business.exceptions.InvalidRefreshTokenException;
-import com.mk.ivents.business.exceptions.InvalidVerificationTokenException;
-import com.mk.ivents.business.exceptions.OldPasswordException;
-import com.mk.ivents.business.exceptions.SignupException;
+import com.mk.ivents.business.exceptions.*;
 import com.mk.ivents.business.interfaces.AuthService;
 import com.mk.ivents.security.exceptions.KeyRetrievalException;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +11,10 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
-public class AuthController {
+public class AuthRestController {
     private final AuthService authService;
 
-    public AuthController(AuthService authService) {
+    public AuthRestController(AuthService authService) {
         this.authService = authService;
     }
 
@@ -36,7 +33,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> logIn(@Valid @RequestBody LoginRequest loginRequest) throws KeyRetrievalException {
+    public ResponseEntity<AuthenticationResponse> logIn(@Valid @RequestBody LoginRequest loginRequest) throws KeyRetrievalException, NotFoundException {
         return ResponseEntity.ok(authService.logIn(loginRequest));
     }
 

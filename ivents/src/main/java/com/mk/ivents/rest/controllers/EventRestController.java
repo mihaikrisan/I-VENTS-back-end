@@ -1,8 +1,8 @@
 package com.mk.ivents.rest.controllers;
 
+import com.mk.ivents.business.dtos.EventDto;
 import com.mk.ivents.business.exceptions.NotFoundException;
 import com.mk.ivents.business.interfaces.EventService;
-import com.mk.ivents.persistence.models.Event;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -21,36 +21,66 @@ public class EventRestController {
 
     @GetMapping
 //    @PreAuthorize("hasAuthority('ORGANIZER')")
-    public ResponseEntity<List<Event>> findAllEvents() {
+    public ResponseEntity<List<EventDto>> findAllEvents() {
         return ResponseEntity.ok(eventService.findAll());
     }
 
     @GetMapping("/{eventId}")
-    public ResponseEntity<Event> findEventById(@PathVariable int eventId) throws NotFoundException {
+    public ResponseEntity<EventDto> findEventById(@PathVariable int eventId) throws NotFoundException {
         return ResponseEntity.ok(eventService.findById(eventId));
     }
 
     @PostMapping
-    public ResponseEntity<Void> addEvent(@RequestBody Event event) {
-        Event savedEvent = eventService.save(event);
+    public ResponseEntity<Void> addEvent(@RequestBody EventDto eventDto) {
+        EventDto savedEventDto = eventService.save(eventDto);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(savedEvent.getId()).toUri();
+                .buildAndExpand(savedEventDto.getId()).toUri();
 
         return ResponseEntity.created(location).build();
     }
 
     @PutMapping("/{eventId}")
-    public ResponseEntity<Event> updateEvent(@RequestBody Event event, @PathVariable int eventId) throws NotFoundException {
-        return ResponseEntity.ok(eventService.update(event, eventId));
-    }
-
-    @GetMapping(params = "event-category")
-    public ResponseEntity<List<Event>> getAllEventsBelongingToCategory(@RequestParam("event-category") String eventCategory) {
-        return ResponseEntity.ok(eventService.findAllEventsBelongingToCategory(eventCategory));
+    public ResponseEntity<EventDto> updateEvent(@RequestBody EventDto eventDto, @PathVariable int eventId) throws NotFoundException {
+        return ResponseEntity.ok(eventService.update(eventDto, eventId));
     }
 
     @DeleteMapping("/{eventId}")
     public void deleteEvent(@PathVariable int eventId) {
         eventService.deleteById(eventId);
+    }
+
+    @GetMapping(params = "event_category")
+    public ResponseEntity<List<EventDto>> getAllEventsBelongingToCategory(@RequestParam("event_category") String eventCategory) {
+        return ResponseEntity.ok(eventService.findAllEventsBelongingToCategory(eventCategory));
+    }
+
+    @GetMapping(value = "/most-recent/number-of-pages", params = "size")
+    public ResponseEntity<Integer> getTotalNumberOfMostRecentPagesWithSize(@RequestParam("size") int size) {
+        return ResponseEntity.ok(eventService.getTotalNumberOfMostRecentPagesWithSize(size));
+    }
+
+    @GetMapping(value = "/most-recent", params = {"page", "size"})
+    public ResponseEntity<List<EventDto>> getMostRecentPage(@RequestParam("page") int page, @RequestParam("size") int size) {
+        return ResponseEntity.ok(eventService.getMostRecentPage(page, size));
+    }
+
+    @GetMapping("/{eventId}/interested-in/number-of-users")
+    public ResponseEntity<Integer> getNumberOfUsersInterested(@PathVariable int eventId) throws NotFoundException {
+        return ResponseEntity.ok(eventService.getNumberOfUsersInterested(eventId));
+    }
+
+    @GetMapping("/{eventId}/going-to/number-of-users")
+    public ResponseEntity<Integer> getNumberOfUsersGoing(@PathVariable int eventId) throws NotFoundException {
+        return ResponseEntity.ok(eventService.getNumberOfUsersGoing(eventId));
+    }
+
+    @GetMapping(value = "/popular/number-of-pages", params = "size")
+    public ResponseEntity<Integer> getTotalNumberOfPopularPagesWithSize(@RequestParam("size") int size) {
+        return ResponseEntity.ok(eventService.getTotalNumberOfPopularPagesWithSize(size));
+    }
+
+    @GetMapping(value = "/popular", params = {"page", "size"})
+    public ResponseEntity<List<EventDto>> getPopularPage(@RequestParam("page") int page, @RequestParam("size") int size) {
+        return ResponseEntity.ok(eventService.getPopularPage(page, size));
     }
 }

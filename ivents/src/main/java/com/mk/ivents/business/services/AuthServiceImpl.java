@@ -145,7 +145,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthenticationResponse logIn(LoginRequest loginRequest) throws KeyRetrievalException {
+    public AuthenticationResponse logIn(LoginRequest loginRequest) throws KeyRetrievalException, NotFoundException {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
                 loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -156,6 +156,7 @@ public class AuthServiceImpl implements AuthService {
         authenticationResponse.setAuthenticationToken(token);
         authenticationResponse.setRefreshToken(refreshTokenService.generateRefreshToken().getToken());
         authenticationResponse.setExpirationTime(Instant.now().plusMillis(jwtProvider.getJwtExpirationTimeInMillis()));
+        authenticationResponse.setUserId(userService.findByUsername(loginRequest.getUsername()).getId());
         authenticationResponse.setUsername(loginRequest.getUsername());
         authenticationResponse.setUserRole(UserRole.valueOf(authentication.getAuthorities()
                 .toArray(new GrantedAuthority[0])[0].getAuthority()));

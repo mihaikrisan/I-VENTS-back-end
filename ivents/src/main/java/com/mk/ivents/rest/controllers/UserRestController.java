@@ -1,5 +1,6 @@
 package com.mk.ivents.rest.controllers;
 
+import com.mk.ivents.business.dtos.EventDto;
 import com.mk.ivents.business.exceptions.NotFoundException;
 import com.mk.ivents.business.interfaces.UserProfileService;
 import com.mk.ivents.business.interfaces.UserService;
@@ -36,7 +37,7 @@ public class UserRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> addUser(@RequestBody User user) {
+    public ResponseEntity<Void> addUser(@RequestBody User user) {
         User savedUser = userService.save(user);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(savedUser.getId()).toUri();
@@ -63,5 +64,98 @@ public class UserRestController {
     public ResponseEntity<UserProfile> updateUserProfile(@RequestBody UserProfile userProfile, @PathVariable int userId)
             throws NotFoundException {
         return ResponseEntity.ok(userProfileService.update(userProfile, userId));
+    }
+
+    @GetMapping("/{userId}/favorite-events/{eventId}")
+    public ResponseEntity<Void> isEventFavorite(@PathVariable int userId, @PathVariable int eventId) throws NotFoundException {
+        if (userService.isEventFavorite(userId, eventId)) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/{userId}/favorite-events/{eventId}")
+    public void addFavoriteEvent(@PathVariable int userId, @PathVariable int eventId) throws NotFoundException {
+        userService.addFavoriteEvent(userId, eventId);
+    }
+
+    @DeleteMapping("/{userId}/favorite-events/{eventId}")
+    public void removeFavoriteEvent(@PathVariable int userId, @PathVariable int eventId) throws NotFoundException {
+        userService.removeFavoriteEvent(userId, eventId);
+    }
+
+    @GetMapping("/{userId}/interested-in/{eventId}")
+    public ResponseEntity<Void> isInterestedInEvent(@PathVariable int userId, @PathVariable int eventId) throws NotFoundException {
+        if (userService.isInterestedInEvent(userId, eventId)) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/{userId}/interested-in/{eventId}")
+    public void addInterestedInEvent(@PathVariable int userId, @PathVariable int eventId) throws NotFoundException {
+        userService.addInterestedInEvent(userId, eventId);
+    }
+
+    @DeleteMapping("/{userId}/interested-in/{eventId}")
+    public void removeInterestedInEvent(@PathVariable int userId, @PathVariable int eventId) throws NotFoundException {
+        userService.removeInterestedInEvent(userId, eventId);
+    }
+
+    @GetMapping("/{userId}/going-to/{eventId}")
+    public ResponseEntity<Void> isGoingToEvent(@PathVariable int userId, @PathVariable int eventId) throws NotFoundException {
+        if (userService.isGoingToEvent(userId, eventId)) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/{userId}/going-to/{eventId}")
+    public void addGoingToEvent(@PathVariable int userId, @PathVariable int eventId) throws NotFoundException {
+        userService.addGoingToEvent(userId, eventId);
+    }
+
+    @DeleteMapping("/{userId}/going-to/{eventId}")
+    public void removeGoingToEvent(@PathVariable int userId, @PathVariable int eventId) throws NotFoundException {
+        userService.removeGoingToEvent(userId, eventId);
+    }
+
+    @GetMapping(value = "/{userId}/favorites/number-of-pages", params = "size")
+    public ResponseEntity<Integer> getTotalNumberOfFavoritesPagesWithSize(@PathVariable int userId,
+                                                                          @RequestParam("size") int size) {
+        return ResponseEntity.ok(userService.getTotalNumberOfFavoritesPagesWithSize(userId, size));
+    }
+
+    @GetMapping(value = "/{userId}/favorites", params = {"page", "size"})
+    public ResponseEntity<List<EventDto>> getFavoritesPage(@PathVariable int userId, @RequestParam("page") int page,
+                                                           @RequestParam("size") int size) {
+        return ResponseEntity.ok(userService.getFavoritesPage(userId, page, size));
+    }
+
+    @GetMapping(value = "/{userId}/interested-in/number-of-pages", params = "size")
+    public ResponseEntity<Integer> getTotalNumberOfInterestedOnPagesWithSize(@PathVariable int userId,
+                                                                             @RequestParam("size") int size) {
+        return ResponseEntity.ok(userService.getTotalNumberOfInterestedInPagesWithSize(userId, size));
+    }
+
+    @GetMapping(value = "/{userId}/interested-in", params = {"page", "size"})
+    public ResponseEntity<List<EventDto>> getInterestedInPage(@PathVariable int userId, @RequestParam("page") int page,
+                                                              @RequestParam("size") int size) {
+        return ResponseEntity.ok(userService.getInterestedInPage(userId, page, size));
+    }
+
+    @GetMapping(value = "/{userId}/going-to/number-of-pages", params = "size")
+    public ResponseEntity<Integer> getTotalNumberOfGoingToPagesWithSize(@PathVariable int userId,
+                                                                        @RequestParam("size") int size) {
+        return ResponseEntity.ok(userService.getTotalNumberOfGoingToPagesWithSize(userId, size));
+    }
+
+    @GetMapping(value = "/{userId}/going-to", params = {"page", "size"})
+    public ResponseEntity<List<EventDto>> getGoingToPage(@PathVariable int userId, @RequestParam("page") int page,
+                                                         @RequestParam("size") int size) {
+        return ResponseEntity.ok(userService.getGoingToPage(userId, page, size));
     }
 }

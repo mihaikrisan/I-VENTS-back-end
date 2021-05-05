@@ -19,6 +19,7 @@
 
     <properties>
         <java.version>11</java.version>
+        <modelmapper.version>2.4.1</modelmapper.version>
         <jjwt-api.version>0.11.2</jjwt-api.version>
         <jjwt-impl.version>0.11.2</jjwt-impl.version>
         <jjwt-jackson.version>0.11.2</jjwt-jackson.version>
@@ -34,6 +35,12 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>${modelmapper.version}</version>
         </dependency>
 
         <dependency>

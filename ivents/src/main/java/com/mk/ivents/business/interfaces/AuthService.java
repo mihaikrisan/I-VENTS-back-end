@@ -18,7 +18,7 @@ public interface AuthService {
 
     void fetchUserAndEnable(VerificationToken verificationToken) throws NotFoundException;
 
-    AuthenticationResponse logIn(LoginRequest loginRequest) throws KeyRetrievalException;
+    AuthenticationResponse logIn(LoginRequest loginRequest) throws KeyRetrievalException, NotFoundException;
 
     AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) throws InvalidRefreshTokenException, KeyRetrievalException;
 
