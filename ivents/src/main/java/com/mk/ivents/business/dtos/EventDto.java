@@ -24,4 +24,5 @@ public class EventDto {
     private String imageUrl;
     private String address;
     private String description;
+    private int organizerId;
 }
