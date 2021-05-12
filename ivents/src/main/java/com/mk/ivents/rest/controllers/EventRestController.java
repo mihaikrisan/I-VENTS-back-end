@@ -31,7 +31,7 @@ public class EventRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addEvent(@RequestBody EventDto eventDto) {
+    public ResponseEntity<Void> addEvent(@RequestBody EventDto eventDto) throws NotFoundException {
         EventDto savedEventDto = eventService.save(eventDto);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(savedEventDto.getId()).toUri();
@@ -82,5 +82,18 @@ public class EventRestController {
     @GetMapping(value = "/popular", params = {"page", "size"})
     public ResponseEntity<List<EventDto>> getPopularPage(@RequestParam("page") int page, @RequestParam("size") int size) {
         return ResponseEntity.ok(eventService.getPopularPage(page, size));
+    }
+
+    @GetMapping(value = "/recommended/{userId}/number-of-pages", params = "size")
+    public ResponseEntity<Integer> getTotalNumberOfRecommendedPagesForUserWithSize(@PathVariable int userId,
+                                                                                   @RequestParam("size") int size) {
+        return ResponseEntity.ok(eventService.getTotalNumberOfRecommendedPagesForUserWithSize(userId, size));
+    }
+
+    @GetMapping(value = "/recommended/{userId}", params = {"page", "size"})
+    public ResponseEntity<List<EventDto>> getRecommendedPageForUser(@PathVariable int userId,
+                                                                    @RequestParam("page") int page,
+                                                                    @RequestParam("size") int size) {
+        return ResponseEntity.ok(eventService.getRecommendedPageForUser(userId, page, size));
     }
 }

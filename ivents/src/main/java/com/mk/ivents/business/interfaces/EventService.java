@@ -11,7 +11,7 @@ public interface EventService {
 
     EventDto findById(int id) throws NotFoundException;
 
-    EventDto save(EventDto eventDto);
+    EventDto save(EventDto eventDto) throws NotFoundException;
 
     EventDto update(EventDto eventDto, int eventId) throws NotFoundException;
 
@@ -36,4 +36,8 @@ public interface EventService {
     int getTotalNumberOfPopularPagesWithSize(int size);
 
     List<EventDto> getPopularPage(int page, int size);
+
+    int getTotalNumberOfRecommendedPagesForUserWithSize(int userId, int size);
+
+    List<EventDto> getRecommendedPageForUser(int userId, int page, int size);
 }

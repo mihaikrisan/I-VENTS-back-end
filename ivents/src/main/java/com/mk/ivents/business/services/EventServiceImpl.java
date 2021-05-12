@@ -5,7 +5,9 @@ import com.mk.ivents.business.exceptions.NotFoundException;
 import com.mk.ivents.business.interfaces.EventService;
 import com.mk.ivents.persistence.constants.EventCategory;
 import com.mk.ivents.persistence.interfaces.EventRepository;
+import com.mk.ivents.persistence.interfaces.UserRepository;
 import com.mk.ivents.persistence.models.Event;
+import com.mk.ivents.persistence.models.User;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.PageRequest;
@@ -25,10 +27,12 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
+    private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    public EventServiceImpl(EventRepository eventRepository, ModelMapper modelMapper) {
+    public EventServiceImpl(EventRepository eventRepository, UserRepository userRepository, ModelMapper modelMapper) {
         this.eventRepository = eventRepository;
+        this.userRepository = userRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -47,9 +51,13 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public EventDto save(EventDto eventDto) {
+    public EventDto save(EventDto eventDto) throws NotFoundException {
         Event event = convertToEntity(eventDto);
         event.setAddedTime(Instant.now());
+
+        Optional<User> organizer = userRepository.findById(eventDto.getOrganizerId());
+        event.setOrganizer(organizer.orElseThrow(() ->
+                new NotFoundException("Did not find organizer with id '" + eventDto.getOrganizerId() + "'")));
 
         return convertToDto(eventRepository.save(event));
     }
@@ -129,6 +137,31 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public int getTotalNumberOfRecommendedPagesForUserWithSize(int userId, int size) {
+        if (size <= 0) {
+            throw new IllegalArgumentException("Page size must not be less than one!");
+        }
+
+        return (int) Math.ceil(getRecommendedEventsForUser(userId).size() / (double) size);
+    }
+
+    @Override
+    public List<EventDto> getRecommendedPageForUser(int userId, int page, int size) {
+        if (page < 0 || size <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        List<EventDto> recommendedEventsForUser = convertToDto(getRecommendedEventsForUser(userId));
+        int fromIndex = page * size;
+
+        if (recommendedEventsForUser.size() < fromIndex) {
+            return Collections.emptyList();
+        }
+
+        return recommendedEventsForUser.subList(fromIndex, Math.min(fromIndex + size, recommendedEventsForUser.size()));
+    }
+
+    @Override
     public EventDto convertToDto(Event event) {
         return modelMapper.map(event, EventDto.class);
     }
@@ -158,6 +191,25 @@ public class EventServiceImpl implements EventService {
                         event.getUsersInterested().size() * 0.25 + 10) / (1 +
                         Math.pow(Duration.between(rankingStartTime, event.getTakingPlaceTime()).toHours(), 0.6)))
                         .reversed())
+                .collect(Collectors.toList());
+    }
+
+    private List<Event> getRecommendedEventsForUser(int userId) {
+        List<Event> goingToEvents = eventRepository.findByUsersGoing_Id(userId);
+
+        if (goingToEvents.size() == 0) {
+            return rankEvents();
+        }
+
+        List<EventCategory> categoriesOfEventsToWhichTheUserIsGoing = goingToEvents
+                .stream()
+                .map(Event::getEventCategory)
+                .distinct()
+                .collect(Collectors.toList());
+
+        return rankEvents()
+                .stream()
+                .filter(event -> categoriesOfEventsToWhichTheUserIsGoing.contains(event.getEventCategory()))
                 .collect(Collectors.toList());
     }
 }
