@@ -66,6 +66,10 @@ public class Event {
     @ManyToMany(mappedBy = "goingToEvents")
     private Set<User> usersGoing;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "organizer_id", nullable = false)
+    private User organizer;
+
     public void addInterestedUser(User user) {
         usersInterested.add(user);
         user.getInterestedInEvents().add(this);
