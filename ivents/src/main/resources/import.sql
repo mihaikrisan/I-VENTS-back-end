@@ -29,7 +29,7 @@ VALUES ('2021-04-21 12:00:00', 'dddr fffyuf gygygy', 'sdtftftf ftyftftftyiftyf f
        ( '2021-04-21 14:00:00', 'r32r23r ef efw efw', 'fwefuwehuf ehehwufhweuifweui efwefiowejfiweiofweio'
        , 'FILM'
        , 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8Y29uY2VydHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80'
-       , 25, 18, '2021-05-29 12:00:00', 'Predestination', 2, 2);
+       , 25, 18, '2021-05-22 12:00:00', 'Predestination', 2, 2);
 
 INSERT INTO event(added_on_utc, address, description, event_category, image_url, takes_place_on_utc, event_name,
                   organizer_id,
@@ -42,7 +42,7 @@ VALUES ('2021-04-20 12:00:00', 'dqwd2323 3ef23f', 'weffu3ih eijfiwjeifj jejfowjk
           Eu nisl nunc mi ipsum faucibus vitae. Lectus magna fringilla urna porttitor rhoncus dolor purus non enim. Vitae tempus quam pellentesque nec nam aliquam sem. Amet nulla facilisi morbi tempus iaculis. Est placerat in egestas erat. Duis at tellus at urna condimentum. Vitae semper quis lectus nulla at volutpat. Aliquam faucibus purus in massa tempor nec feugiat nisl pretium. Interdum consectetur libero id faucibus. Luctus accumsan tortor posuere ac ut consequat semper viverra. Feugiat in fermentum posuere urna nec. Pellentesque eu tincidunt tortor aliquam nulla. Tempor nec feugiat nisl pretium fusce id. Tortor consequat id porta nibh venenatis.'
        , 'SPORTS_AND_ACTIVE_LIFE'
        , 'https://ifbb.com/wp-content/uploads/2019/05/AA-6.jpg'
-       , '2021-05-29 23:00:00', 'Bodybuilding competition', 2, 4);
+       , '2021-05-10 23:00:00', 'Bodybuilding competition', 2, 4);
 
 INSERT INTO hashtag(event_id, hashtag)
 VALUES (1, '#movienight'),
@@ -60,4 +60,3 @@ VALUES (1, 4),
        (3, 4),
        (2, 4),
        (1, 2);
-
