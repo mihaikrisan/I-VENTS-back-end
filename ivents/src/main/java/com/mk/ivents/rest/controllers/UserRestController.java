@@ -1,6 +1,8 @@
 package com.mk.ivents.rest.controllers;
 
+import com.mk.ivents.business.dtos.AllTimeStats;
 import com.mk.ivents.business.dtos.EventDto;
+import com.mk.ivents.business.dtos.MonthlyStats;
 import com.mk.ivents.business.exceptions.NotFoundException;
 import com.mk.ivents.business.interfaces.UserProfileService;
 import com.mk.ivents.business.interfaces.UserService;
@@ -157,5 +159,15 @@ public class UserRestController {
     public ResponseEntity<List<EventDto>> getGoingToPage(@PathVariable int userId, @RequestParam("page") int page,
                                                          @RequestParam("size") int size) {
         return ResponseEntity.ok(userService.getGoingToPage(userId, page, size));
+    }
+
+    @GetMapping("/{userId}/all-time-stats")
+    public ResponseEntity<AllTimeStats> getAllTimeStats(@PathVariable int userId) {
+        return ResponseEntity.ok(userService.getAllTimeStats(userId));
+    }
+
+    @GetMapping("/{userId}/monthly-stats")
+    public ResponseEntity<MonthlyStats> getMonthlyStats(@PathVariable int userId) {
+        return ResponseEntity.ok(userService.getMonthlyStats(userId));
     }
 }

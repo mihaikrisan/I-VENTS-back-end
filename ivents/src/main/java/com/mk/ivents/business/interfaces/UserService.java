@@ -1,6 +1,8 @@
 package com.mk.ivents.business.interfaces;
 
+import com.mk.ivents.business.dtos.AllTimeStats;
 import com.mk.ivents.business.dtos.EventDto;
+import com.mk.ivents.business.dtos.MonthlyStats;
 import com.mk.ivents.business.exceptions.NotFoundException;
 import com.mk.ivents.persistence.models.User;
 import com.mk.ivents.persistence.models.UserProfile;
@@ -55,4 +57,8 @@ public interface UserService {
     int getTotalNumberOfGoingToPagesWithSize(int userId, int size);
 
     List<EventDto> getGoingToPage(int userId, int page, int size);
+
+    AllTimeStats getAllTimeStats(int userId);
+
+    MonthlyStats getMonthlyStats(int userId);
 }

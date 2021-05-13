@@ -1,6 +1,9 @@
 package com.mk.ivents.business.services;
 
+import com.mk.ivents.business.dtos.AllTimeStats;
+import com.mk.ivents.business.dtos.DateNumberStatPair;
 import com.mk.ivents.business.dtos.EventDto;
+import com.mk.ivents.business.dtos.MonthlyStats;
 import com.mk.ivents.business.exceptions.NotFoundException;
 import com.mk.ivents.business.interfaces.EventService;
 import com.mk.ivents.business.interfaces.UserService;
@@ -13,6 +16,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.time.Period;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -228,5 +235,65 @@ public class UserServiceImpl implements UserService {
         return eventService.convertToDto(userRepository
                 .getGoingToEvents(userId, PageRequest.of(page, size))
                 .getContent());
+    }
+
+    @Override
+    public AllTimeStats getAllTimeStats(int userId) {
+        List<Event> allOrganizersEvents = eventRepository.findByOrganizer_Id(userId);
+
+        int eventsCreatedNumber = allOrganizersEvents.size();
+
+        int usersGoingNumber = 0;
+        int usersInterestedNumber = 0;
+        for (Event event : allOrganizersEvents) {
+            usersGoingNumber += event.getUsersGoing().size();
+            usersInterestedNumber += event.getUsersInterested().size();
+        }
+
+        AllTimeStats allTimeStats = new AllTimeStats();
+        allTimeStats.setEventsCreatedNumber(eventsCreatedNumber);
+        allTimeStats.setUsersGoingNumber(usersGoingNumber);
+        allTimeStats.setUsersInterestedNumber(usersInterestedNumber);
+
+        return allTimeStats;
+    }
+
+    @Override
+    public MonthlyStats getMonthlyStats(int userId) {
+        List<DateNumberStatPair> usersGoingStats = new ArrayList<>();
+        List<DateNumberStatPair> usersInterestedStats = new ArrayList<>();
+
+        Instant currentPointInTime = Instant.now();
+        for (int i = 0; i < 7; i++) {
+            List<Event> eventsAddedBeforePointInTime = eventRepository.findByOrganizer_IdAndTakingPlaceTimeAfter(userId,
+                    currentPointInTime);
+            int numberOfUsersGoing = 0;
+            int numberOfUsersInterested = 0;
+
+            for (Event event : eventsAddedBeforePointInTime) {
+                numberOfUsersGoing += event.getUsersGoing().size();
+                numberOfUsersInterested += event.getUsersInterested().size();
+            }
+
+            DateNumberStatPair usersGoingDateNumberStatPair = new DateNumberStatPair();
+            usersGoingDateNumberStatPair.setStatDate(currentPointInTime);
+            usersGoingDateNumberStatPair.setStatNumber(numberOfUsersGoing);
+            usersGoingStats.add(usersGoingDateNumberStatPair);
+
+            DateNumberStatPair usersInterestedDateNumberStatPair = new DateNumberStatPair();
+            usersInterestedDateNumberStatPair.setStatDate(currentPointInTime);
+            usersInterestedDateNumberStatPair.setStatNumber(numberOfUsersInterested);
+            usersInterestedStats.add(usersInterestedDateNumberStatPair);
+
+            currentPointInTime = currentPointInTime.minus(Period.ofDays(5));
+        }
+
+        MonthlyStats monthlyStats = new MonthlyStats();
+        Collections.reverse(usersGoingStats);
+        Collections.reverse(usersInterestedStats);
+        monthlyStats.setUsersGoingStats(usersGoingStats);
+        monthlyStats.setUsersInterestedStats(usersInterestedStats);
+
+        return monthlyStats;
     }
 }
