@@ -162,6 +162,20 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public int getTotalNumberOfAllOrganizerEventsPagesWithSize(int userId, int size) {
+        return eventRepository.getByOrganizer_IdAndTakingPlaceTimeAfter(userId, Instant.now(),
+                PageRequest.of(0, size, Sort.by("addedTime").descending())).getTotalPages();
+    }
+
+    @Override
+    public List<EventDto> getAllOrganizerEventsPage(int userId, int page, int size) {
+        return convertToDto(eventRepository
+                .getByOrganizer_IdAndTakingPlaceTimeAfter(userId, Instant.now(),
+                        PageRequest.of(page, size, Sort.by("addedTime").descending()))
+                .getContent());
+    }
+
+    @Override
     public EventDto convertToDto(Event event) {
         return modelMapper.map(event, EventDto.class);
     }

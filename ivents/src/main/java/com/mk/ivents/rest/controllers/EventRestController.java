@@ -96,4 +96,17 @@ public class EventRestController {
                                                                     @RequestParam("size") int size) {
         return ResponseEntity.ok(eventService.getRecommendedPageForUser(userId, page, size));
     }
+
+    @GetMapping(value = "/organizer/{userId}/number-of-pages", params = "size")
+    public ResponseEntity<Integer> getTotalNumberOfAllOrganizerEventsPagesWithSize(@PathVariable int userId,
+                                                                                   @RequestParam("size") int size) {
+        return ResponseEntity.ok(eventService.getTotalNumberOfAllOrganizerEventsPagesWithSize(userId, size));
+    }
+
+    @GetMapping(value = "/organizer/{userId}", params = {"page", "size"})
+    public ResponseEntity<List<EventDto>> getAllOrganizerEventsPage(@PathVariable int userId,
+                                                                    @RequestParam("page") int page,
+                                                                    @RequestParam("size") int size) {
+        return ResponseEntity.ok(eventService.getAllOrganizerEventsPage(userId, page, size));
+    }
 }

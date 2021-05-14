@@ -21,4 +21,6 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     List<Event> findByOrganizer_Id(int organizerId);
 
     List<Event> findByOrganizer_IdAndTakingPlaceTimeAfter(int organizerId, Instant pointInTime);
+
+    Page<Event> getByOrganizer_IdAndTakingPlaceTimeAfter(int organizerId, Instant pointInTime, Pageable pageable);
 }
