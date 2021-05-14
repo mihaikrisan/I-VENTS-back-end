@@ -40,4 +40,8 @@ public interface EventService {
     int getTotalNumberOfRecommendedPagesForUserWithSize(int userId, int size);
 
     List<EventDto> getRecommendedPageForUser(int userId, int page, int size);
+
+    int getTotalNumberOfAllOrganizerEventsPagesWithSize(int userId, int size);
+
+    List<EventDto> getAllOrganizerEventsPage(int userId, int page, int size);
 }
