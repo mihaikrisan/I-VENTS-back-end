@@ -17,8 +17,6 @@ public class EventDto {
     private String title;
     private EventCategory eventCategory;
     private List<String> hashtags;
-    private Integer minimumAge;
-    private Integer maxNumberOfPersons;
     private Position position;
     private Instant takingPlaceTime;
     private String imageUrl;

@@ -38,14 +38,10 @@ public class User {
     @JoinColumn(name = "user_profile_id", nullable = false)
     private UserProfile userProfile;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "interested_in_event", joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "event_id")})
+    @ManyToMany(mappedBy = "usersInterested")
     private Set<Event> interestedInEvents;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "going_to_event", joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "event_id")})
+    @ManyToMany(mappedBy = "usersGoing")
     private Set<Event> goingToEvents;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})

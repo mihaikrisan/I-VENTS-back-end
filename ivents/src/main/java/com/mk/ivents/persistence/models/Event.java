@@ -35,12 +35,6 @@ public class Event {
     @Column(name = "hashtag", nullable = false)
     private List<String> hashtags;
 
-    @Column(name = "minimum_age")
-    private Integer minimumAge;
-
-    @Column(name = "max_number_of_persons")
-    private Integer maxNumberOfPersons;
-
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
     @JoinColumn(name = "position_id", nullable = false)
     private Position position;
@@ -60,10 +54,14 @@ public class Event {
     @Column(name = "description", length = 2048, nullable = false)
     private String description;
 
-    @ManyToMany(mappedBy = "interestedInEvents")
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "interested_in_event", joinColumns = {@JoinColumn(name = "event_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private Set<User> usersInterested;
 
-    @ManyToMany(mappedBy = "goingToEvents")
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "going_to_event", joinColumns = {@JoinColumn(name = "event_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private Set<User> usersGoing;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
