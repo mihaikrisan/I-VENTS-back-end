@@ -1,9 +1,6 @@
 package com.mk.ivents.business.services;
 
-import com.mk.ivents.business.dtos.AllTimeStats;
-import com.mk.ivents.business.dtos.DateNumberStatPair;
-import com.mk.ivents.business.dtos.EventDto;
-import com.mk.ivents.business.dtos.MonthlyStats;
+import com.mk.ivents.business.dtos.*;
 import com.mk.ivents.business.exceptions.NotFoundException;
 import com.mk.ivents.business.interfaces.EventService;
 import com.mk.ivents.business.interfaces.UserService;
@@ -42,10 +39,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findById(int id) throws NotFoundException {
+    public UserDto findById(int id) throws NotFoundException {
         Optional<User> userOptional = userRepository.findById(id);
+        User user = userOptional.orElseThrow(() -> new NotFoundException("Did not find user with id '" + id + "'"));
 
-        return userOptional.orElseThrow(() -> new NotFoundException("Did not find user with id '" + id + "'"));
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setUsername(user.getUsername());
+        userDto.setFirstName(user.getUserProfile().getFirstName());
+        userDto.setLastName(user.getUserProfile().getLastName());
+        userDto.setAge(user.getUserProfile().getAge());
+        userDto.setEmail(user.getUserProfile().getEmail());
+        userDto.setPhoneNumber(user.getUserProfile().getPhoneNumber());
+
+        return userDto;
     }
 
     @Override
@@ -87,7 +94,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserProfile getUserProfile(int userId) throws NotFoundException {
-        return findById(userId).getUserProfile();
+        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Did not find user with id '"
+                + userId + "'")).getUserProfile();
     }
 
     @Override
