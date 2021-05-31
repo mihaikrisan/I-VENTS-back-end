@@ -3,6 +3,7 @@ package com.mk.ivents.rest.controllers;
 import com.mk.ivents.business.dtos.AllTimeStats;
 import com.mk.ivents.business.dtos.EventDto;
 import com.mk.ivents.business.dtos.MonthlyStats;
+import com.mk.ivents.business.dtos.UserDto;
 import com.mk.ivents.business.exceptions.NotFoundException;
 import com.mk.ivents.business.interfaces.UserProfileService;
 import com.mk.ivents.business.interfaces.UserService;
@@ -34,7 +35,7 @@ public class UserRestController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<User> findUserById(@PathVariable int userId) throws NotFoundException {
+    public ResponseEntity<UserDto> findUserById(@PathVariable int userId) throws NotFoundException {
         return ResponseEntity.ok(userService.findById(userId));
     }
 

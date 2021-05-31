@@ -3,6 +3,7 @@ package com.mk.ivents.business.interfaces;
 import com.mk.ivents.business.dtos.AllTimeStats;
 import com.mk.ivents.business.dtos.EventDto;
 import com.mk.ivents.business.dtos.MonthlyStats;
+import com.mk.ivents.business.dtos.UserDto;
 import com.mk.ivents.business.exceptions.NotFoundException;
 import com.mk.ivents.persistence.models.User;
 import com.mk.ivents.persistence.models.UserProfile;
@@ -12,7 +13,7 @@ import java.util.List;
 public interface UserService {
     List<User> findAll();
 
-    User findById(int id) throws NotFoundException;
+    UserDto findById(int id) throws NotFoundException;
 
     User findByUsername(String username) throws NotFoundException;
 

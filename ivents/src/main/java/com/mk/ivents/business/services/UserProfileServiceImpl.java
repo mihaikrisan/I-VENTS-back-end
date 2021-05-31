@@ -2,8 +2,8 @@ package com.mk.ivents.business.services;
 
 import com.mk.ivents.business.exceptions.NotFoundException;
 import com.mk.ivents.business.interfaces.UserProfileService;
-import com.mk.ivents.business.interfaces.UserService;
 import com.mk.ivents.persistence.interfaces.UserProfileRepository;
+import com.mk.ivents.persistence.interfaces.UserRepository;
 import com.mk.ivents.persistence.models.User;
 import com.mk.ivents.persistence.models.UserProfile;
 import org.springframework.stereotype.Service;
@@ -15,11 +15,11 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class UserProfileServiceImpl implements UserProfileService {
     private final UserProfileRepository userProfileRepository;
-    private final UserService userService;
+    private final UserRepository userRepository;
 
-    public UserProfileServiceImpl(UserProfileRepository userProfileRepository, UserService userService) {
+    public UserProfileServiceImpl(UserProfileRepository userProfileRepository, UserRepository userRepository) {
         this.userProfileRepository = userProfileRepository;
-        this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -31,7 +31,8 @@ public class UserProfileServiceImpl implements UserProfileService {
     @Override
     @Transactional
     public UserProfile update(UserProfile userProfile, int userId) throws NotFoundException {
-        User user = userService.findById(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Did not find user with id '"
+                + userId + "'"));
 
         int userProfileId = user.getUserProfile().getId();
         userProfile.setId(userProfileId);
