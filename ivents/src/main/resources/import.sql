@@ -20,7 +20,7 @@ VALUES (46.769892875017206, 23.580016953993848),
        (46.77518353683267, 23.573407990981153),
        (46.75518353683267, 23.673407990981153);
 
-INSERT INTO event(added_on_utc, address, description, event_category, image_url, takes_place_on_utc, event_name,
+INSERT INTO event(added_on_utc, address, description, event_category, image_url, takes_place_on_utc, event_title,
                   organizer_id, position_id)
 VALUES ('2021-04-21 12:00:00', 'dddr fffyuf gygygy', 'sdtftftf ftyftftftyiftyf ffufyugyugyug ggygyugyugyu',
         'FILM',

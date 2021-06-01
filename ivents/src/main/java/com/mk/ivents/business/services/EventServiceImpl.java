@@ -176,6 +176,32 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public int getTotalNumberOfFullTextSearchResultPagesWithSize(String keyword, int size) {
+        return eventRepository.fullTextSearch(keyword + "*",
+                PageRequest.of(0, size)).getTotalPages();
+    }
+
+    @Override
+    public List<EventDto> getFullTextSearchPage(String keyword, int page, int size) {
+        return convertToDto(eventRepository
+                .fullTextSearch(keyword + "*", PageRequest.of(page, size))
+                .getContent());
+    }
+
+    @Override
+    public int getTotalNumberOfOrganizerFullTextSearchResultPagesWithSize(String keyword, int organizerId, int size) {
+        return eventRepository.organizerFullTextSearch(keyword + "*", organizerId,
+                PageRequest.of(0, size)).getTotalPages();
+    }
+
+    @Override
+    public List<EventDto> getOrganizerFullTextSearchPage(String keyword, int organizerId, int page, int size) {
+        return convertToDto(eventRepository
+                .organizerFullTextSearch(keyword + "*", organizerId, PageRequest.of(page, size))
+                .getContent());
+    }
+
+    @Override
     public EventDto convertToDto(Event event) {
         return modelMapper.map(event, EventDto.class);
     }

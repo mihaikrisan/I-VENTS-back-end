@@ -44,4 +44,12 @@ public interface EventService {
     int getTotalNumberOfAllOrganizerEventsPagesWithSize(int userId, int size);
 
     List<EventDto> getAllOrganizerEventsPage(int userId, int page, int size);
+
+    int getTotalNumberOfFullTextSearchResultPagesWithSize(String keyword, int size);
+
+    List<EventDto> getFullTextSearchPage(String keyword, int page, int size);
+
+    int getTotalNumberOfOrganizerFullTextSearchResultPagesWithSize(String keyword, int organizerId, int size);
+
+    List<EventDto> getOrganizerFullTextSearchPage(String keyword, int organizerId, int page, int size);
 }

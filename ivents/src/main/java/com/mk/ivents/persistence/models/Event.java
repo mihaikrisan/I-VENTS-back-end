@@ -23,7 +23,7 @@ public class Event {
     @Column(name = "event_id")
     private int id;
 
-    @Column(name = "event_name", nullable = false, length = 45)
+    @Column(name = "event_title", nullable = false, length = 45)
     private String title;
 
     @Enumerated(EnumType.STRING)

@@ -109,4 +109,33 @@ public class EventRestController {
                                                                     @RequestParam("size") int size) {
         return ResponseEntity.ok(eventService.getAllOrganizerEventsPage(userId, page, size));
     }
+
+    @GetMapping(value = "/search/{keyword}/number-of-pages", params = "size")
+    public ResponseEntity<Integer> getTotalNumberOfFullTextSearchResultPagesWithSize(@PathVariable String keyword,
+                                                                                     @RequestParam("size") int size) {
+        return ResponseEntity.ok(eventService.getTotalNumberOfFullTextSearchResultPagesWithSize(keyword, size));
+    }
+
+    @GetMapping(value = "/search/{keyword}", params = {"page", "size"})
+    public ResponseEntity<List<EventDto>> getFullTextSearchPage(@PathVariable String keyword,
+                                                                @RequestParam("page") int page,
+                                                                @RequestParam("size") int size) {
+        return ResponseEntity.ok(eventService.getFullTextSearchPage(keyword, page, size));
+    }
+
+    @GetMapping(value = "/search/{keyword}/organizer/{userId}/number-of-pages", params = "size")
+    public ResponseEntity<Integer> getTotalNumberOfOrganizerFullTextSearchResultPagesWithSize(@PathVariable String keyword,
+                                                                                              @PathVariable int userId,
+                                                                                              @RequestParam("size") int size) {
+        return ResponseEntity.ok(eventService.getTotalNumberOfOrganizerFullTextSearchResultPagesWithSize(keyword,
+                userId, size));
+    }
+
+    @GetMapping(value = "/search/{keyword}/organizer/{userId}", params = {"page", "size"})
+    public ResponseEntity<List<EventDto>> getOrganizerFullTextSearchPage(@PathVariable String keyword,
+                                                                         @PathVariable int userId,
+                                                                         @RequestParam("page") int page,
+                                                                         @RequestParam("size") int size) {
+        return ResponseEntity.ok(eventService.getOrganizerFullTextSearchPage(keyword, userId, page, size));
+    }
 }
