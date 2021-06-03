@@ -1,5 +1,6 @@
 package com.mk.ivents.business.services;
 
+import com.mk.ivents.business.dtos.AdvancedSearchRequest;
 import com.mk.ivents.business.dtos.EventDto;
 import com.mk.ivents.business.exceptions.NotFoundException;
 import com.mk.ivents.business.interfaces.EventService;
@@ -199,6 +200,52 @@ public class EventServiceImpl implements EventService {
         return convertToDto(eventRepository
                 .organizerFullTextSearch(keyword + "*", organizerId, PageRequest.of(page, size))
                 .getContent());
+    }
+
+    @Override
+    public int getTotalNumberOfAdvancedSearchResultPagesWithSize(AdvancedSearchRequest advancedSearchRequest, int size) {
+        if (size <= 0) {
+            throw new IllegalArgumentException("Page size must not be less than one!");
+        }
+
+        List<Event> searchResults = eventRepository.advancedSearch(advancedSearchRequest.getTitle(),
+                advancedSearchRequest.getEventCategory(), advancedSearchRequest.getTakingPlaceStart(),
+                advancedSearchRequest.getTakingPlaceEnd());
+
+        if (advancedSearchRequest.getHashtags() != null) {
+            searchResults = searchResults
+                    .stream()
+                    .filter(event -> event.getHashtags().stream().anyMatch(advancedSearchRequest.getHashtags()::contains))
+                    .collect(Collectors.toList());
+        }
+
+        return (int) Math.ceil(searchResults.size() / (double) size);
+    }
+
+    @Override
+    public List<EventDto> getAdvancedSearchPage(AdvancedSearchRequest advancedSearchRequest, int page, int size) {
+        if (page < 0 || size <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        List<EventDto> searchResults = convertToDto(eventRepository.advancedSearch(advancedSearchRequest.getTitle(),
+                advancedSearchRequest.getEventCategory(), advancedSearchRequest.getTakingPlaceStart(),
+                advancedSearchRequest.getTakingPlaceEnd()));
+
+        if (advancedSearchRequest.getHashtags() != null) {
+            searchResults = searchResults
+                    .stream()
+                    .filter(event -> event.getHashtags().stream().anyMatch(advancedSearchRequest.getHashtags()::contains))
+                    .collect(Collectors.toList());
+        }
+
+        int fromIndex = page * size;
+
+        if (searchResults.size() < fromIndex) {
+            return Collections.emptyList();
+        }
+
+        return searchResults.subList(fromIndex, Math.min(fromIndex + size, searchResults.size()));
     }
 
     @Override
