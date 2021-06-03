@@ -1,5 +1,6 @@
 package com.mk.ivents.rest.controllers;
 
+import com.mk.ivents.business.dtos.AdvancedSearchRequest;
 import com.mk.ivents.business.dtos.EventDto;
 import com.mk.ivents.business.exceptions.NotFoundException;
 import com.mk.ivents.business.interfaces.EventService;
@@ -137,5 +138,19 @@ public class EventRestController {
                                                                          @RequestParam("page") int page,
                                                                          @RequestParam("size") int size) {
         return ResponseEntity.ok(eventService.getOrganizerFullTextSearchPage(keyword, userId, page, size));
+    }
+
+    @PostMapping(value = "/advanced-search", params = "size")
+    public ResponseEntity<Integer> getTotalNumberOfAdvancedSearchResultPagesWithSize(@RequestBody AdvancedSearchRequest advancedSearchRequest,
+                                                                                     @RequestParam("size") int size) {
+        return ResponseEntity.ok(eventService.getTotalNumberOfAdvancedSearchResultPagesWithSize(advancedSearchRequest,
+                size));
+    }
+
+    @PostMapping(value = "/advanced-search", params = {"page", "size"})
+    public ResponseEntity<List<EventDto>> getAdvancedSearchPage(@RequestBody AdvancedSearchRequest advancedSearchRequest,
+                                                                @RequestParam("page") int page,
+                                                                @RequestParam("size") int size) {
+        return ResponseEntity.ok(eventService.getAdvancedSearchPage(advancedSearchRequest, page, size));
     }
 }

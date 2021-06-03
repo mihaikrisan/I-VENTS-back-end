@@ -1,5 +1,6 @@
 package com.mk.ivents.business.interfaces;
 
+import com.mk.ivents.business.dtos.AdvancedSearchRequest;
 import com.mk.ivents.business.dtos.EventDto;
 import com.mk.ivents.business.exceptions.NotFoundException;
 import com.mk.ivents.persistence.models.Event;
@@ -52,4 +53,8 @@ public interface EventService {
     int getTotalNumberOfOrganizerFullTextSearchResultPagesWithSize(String keyword, int organizerId, int size);
 
     List<EventDto> getOrganizerFullTextSearchPage(String keyword, int organizerId, int page, int size);
+
+    int getTotalNumberOfAdvancedSearchResultPagesWithSize(AdvancedSearchRequest advancedSearchRequest, int size);
+
+    List<EventDto> getAdvancedSearchPage(AdvancedSearchRequest advancedSearchRequest, int page, int size);
 }
