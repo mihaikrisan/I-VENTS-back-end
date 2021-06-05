@@ -2,8 +2,10 @@ package com.mk.ivents.business.services;
 
 import com.mk.ivents.business.dtos.AdvancedSearchRequest;
 import com.mk.ivents.business.dtos.EventDto;
+import com.mk.ivents.business.dtos.ScheduleRequest;
 import com.mk.ivents.business.exceptions.NotFoundException;
 import com.mk.ivents.business.interfaces.EventService;
+import com.mk.ivents.business.interfaces.SchedulerService;
 import com.mk.ivents.persistence.constants.EventCategory;
 import com.mk.ivents.persistence.interfaces.EventRepository;
 import com.mk.ivents.persistence.interfaces.UserRepository;
@@ -30,11 +32,14 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final SchedulerService schedulerService;
 
-    public EventServiceImpl(EventRepository eventRepository, UserRepository userRepository, ModelMapper modelMapper) {
+    public EventServiceImpl(EventRepository eventRepository, UserRepository userRepository, ModelMapper modelMapper,
+                            SchedulerService schedulerService) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
+        this.schedulerService = schedulerService;
     }
 
     @Override
@@ -246,6 +251,29 @@ public class EventServiceImpl implements EventService {
         }
 
         return searchResults.subList(fromIndex, Math.min(fromIndex + size, searchResults.size()));
+    }
+
+    @Override
+    public List<EventDto> getSchedule(ScheduleRequest scheduleRequest) {
+        Instant endTime = scheduleRequest.getScheduleDay().plus(Duration.ofDays(1));
+        List<Event> eventList = eventRepository.findByTakingPlaceTimeBetween(scheduleRequest.getScheduleDay(),
+                endTime);
+
+        if (!scheduleRequest.getPreferredEventCategories().isEmpty()) {
+            eventList = eventList
+                    .stream()
+                    .filter(event -> scheduleRequest.getPreferredEventCategories().contains(event.getEventCategory()))
+                    .collect(Collectors.toList());
+        }
+
+        if (!scheduleRequest.getPreferredHashtags().isEmpty()) {
+            eventList = eventList
+                    .stream()
+                    .filter(event -> event.getHashtags().stream().anyMatch(hashtag -> scheduleRequest.getPreferredHashtags().contains(hashtag)))
+                    .collect(Collectors.toList());
+        }
+
+        return convertToDto(schedulerService.generateSchedule(eventList, endTime));
     }
 
     @Override

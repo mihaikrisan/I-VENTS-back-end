@@ -2,6 +2,7 @@ package com.mk.ivents.rest.controllers;
 
 import com.mk.ivents.business.dtos.AdvancedSearchRequest;
 import com.mk.ivents.business.dtos.EventDto;
+import com.mk.ivents.business.dtos.ScheduleRequest;
 import com.mk.ivents.business.exceptions.NotFoundException;
 import com.mk.ivents.business.interfaces.EventService;
 import org.springframework.http.ResponseEntity;
@@ -152,5 +153,10 @@ public class EventRestController {
                                                                 @RequestParam("page") int page,
                                                                 @RequestParam("size") int size) {
         return ResponseEntity.ok(eventService.getAdvancedSearchPage(advancedSearchRequest, page, size));
+    }
+
+    @PostMapping("/schedule")
+    public ResponseEntity<List<EventDto>> getSchedule(@RequestBody ScheduleRequest scheduleRequest) {
+        return ResponseEntity.ok(eventService.getSchedule(scheduleRequest));
     }
 }

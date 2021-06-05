@@ -2,6 +2,7 @@ package com.mk.ivents.business.interfaces;
 
 import com.mk.ivents.business.dtos.AdvancedSearchRequest;
 import com.mk.ivents.business.dtos.EventDto;
+import com.mk.ivents.business.dtos.ScheduleRequest;
 import com.mk.ivents.business.exceptions.NotFoundException;
 import com.mk.ivents.persistence.models.Event;
 
@@ -57,4 +58,6 @@ public interface EventService {
     int getTotalNumberOfAdvancedSearchResultPagesWithSize(AdvancedSearchRequest advancedSearchRequest, int size);
 
     List<EventDto> getAdvancedSearchPage(AdvancedSearchRequest advancedSearchRequest, int page, int size);
+
+    List<EventDto> getSchedule(ScheduleRequest scheduleRequest);
 }
