@@ -76,6 +76,8 @@ public interface EventRepository extends JpaRepository<Event, Integer>, JpaSpeci
             nativeQuery = true)
     Page<Event> organizerFullTextSearch(String keyword, int organizerId, Pageable pageable);
 
+    List<Event> findByTakingPlaceTimeBetween(Instant startTime, Instant endTime);
+
     default List<Event> advancedSearch(String title, EventCategory eventCategory, Instant takingPlaceStart,
                                        Instant takingPlaceEnd) {
         return findAll(Specification
