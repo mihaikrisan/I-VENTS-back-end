@@ -1,12 +1,10 @@
 package com.mk.ivents.persistence.models;
 
-import com.mk.ivents.persistence.constants.EventCategory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -34,10 +32,4 @@ public class UserProfile {
 
     @Column(name = "phone_number", nullable = false, length = 45, unique = true)
     private String phoneNumber;
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "preferred_event_category", joinColumns = @JoinColumn(name = "user_profile_id"))
-    @Column(name = "event_category", nullable = false)
-    private List<EventCategory> preferredEventCategories;
 }

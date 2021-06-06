@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -89,7 +88,6 @@ public class AuthServiceImpl implements AuthService {
         userProfile.setAge(registerRequest.getAge());
         userProfile.setEmail(email);
         userProfile.setPhoneNumber(phoneNumber);
-        userProfile.setPreferredEventCategories(new ArrayList<>());
 
         User user = new User();
         user.setUsername(username);
