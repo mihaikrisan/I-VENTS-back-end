@@ -10,6 +10,7 @@ import com.mk.ivents.persistence.constants.EventCategory;
 import com.mk.ivents.persistence.interfaces.EventRepository;
 import com.mk.ivents.persistence.interfaces.UserRepository;
 import com.mk.ivents.persistence.models.Event;
+import com.mk.ivents.persistence.models.Position;
 import com.mk.ivents.persistence.models.User;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -259,6 +260,11 @@ public class EventServiceImpl implements EventService {
         List<Event> eventList = eventRepository.findByTakingPlaceTimeBetween(scheduleRequest.getScheduleDay(),
                 endTime);
 
+        eventList = eventList
+                .stream()
+                .filter(event -> haversine(scheduleRequest.getClientPosition(), event.getPosition()) <= 5)
+                .collect(Collectors.toList());
+
         if (!scheduleRequest.getPreferredEventCategories().isEmpty()) {
             eventList = eventList
                     .stream()
@@ -326,5 +332,18 @@ public class EventServiceImpl implements EventService {
                 .stream()
                 .filter(event -> categoriesOfEventsToWhichTheUserIsGoing.contains(event.getEventCategory()))
                 .collect(Collectors.toList());
+    }
+
+    private double haversine(Position position1, Position position2) {
+        double earthsRadiusInKm = 6371;
+
+        double deltaLat = Math.toRadians(position2.getLat() - position1.getLat());
+        double deltaLng = Math.toRadians(position2.getLng() - position1.getLng());
+
+        double lat1 = Math.toRadians(position1.getLat());
+        double lat2 = Math.toRadians(position2.getLat());
+
+        return earthsRadiusInKm * 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(deltaLat / 2), 2) +
+                Math.pow(Math.sin(deltaLng / 2), 2) * Math.cos(lat1) * Math.cos(lat2)));
     }
 }
