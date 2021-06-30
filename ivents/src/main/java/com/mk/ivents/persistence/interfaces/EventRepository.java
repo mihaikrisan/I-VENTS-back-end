@@ -36,15 +36,18 @@ public interface EventRepository extends JpaRepository<Event, Integer>, JpaSpeci
     static Specification<Event> isTakingPlaceBetween(Instant intervalStart, Instant intervalEnd) {
         return (event, cq, cb) -> {
             if (intervalStart == null && intervalEnd == null) {
-                return null;
+                return cb.greaterThanOrEqualTo(event.get("takingPlaceTime"), Instant.now());
+            }
+
+            if (intervalStart == null) {
+                return cb.between(event.get("takingPlaceTime"), Instant.now(), intervalEnd);
             }
 
             if (intervalEnd == null) {
                 return cb.greaterThanOrEqualTo(event.get("takingPlaceTime"), intervalStart);
             }
 
-            return cb.between(event.get("takingPlaceTime"), intervalStart != null ? intervalStart : Instant.now(),
-                    intervalEnd);
+            return cb.between(event.get("takingPlaceTime"), intervalStart, intervalEnd);
         };
     }
 
@@ -63,16 +66,16 @@ public interface EventRepository extends JpaRepository<Event, Integer>, JpaSpeci
     Page<Event> getByOrganizer_IdAndTakingPlaceTimeAfter(int organizerId, Instant pointInTime, Pageable pageable);
 
     @Query(value = "SELECT * FROM event WHERE MATCH (event_title, event_category, description, address) " +
-            "AGAINST (?1 IN BOOLEAN MODE)",
+            "AGAINST (?1 IN BOOLEAN MODE) AND takes_place_on_utc >= CURRENT_DATE",
             countQuery = "SELECT COUNT(*) FROM event WHERE MATCH (event_title, event_category, description, address) " +
-                    "AGAINST (?1 IN BOOLEAN MODE)",
+                    "AGAINST (?1 IN BOOLEAN MODE) AND takes_place_on_utc >= CURRENT_DATE",
             nativeQuery = true)
     Page<Event> fullTextSearch(String keyword, Pageable pageable);
 
     @Query(value = "SELECT * FROM event WHERE MATCH (event_title, event_category, description, address) " +
-            "AGAINST (?1 IN BOOLEAN MODE) AND organizer_id = ?2",
+            "AGAINST (?1 IN BOOLEAN MODE) AND organizer_id = ?2 AND takes_place_on_utc >= CURRENT_DATE",
             countQuery = "SELECT COUNT(*) FROM event WHERE MATCH (event_title, event_category, description, address) " +
-                    "AGAINST (?1 IN BOOLEAN MODE) AND organizer_id = ?2",
+                    "AGAINST (?1 IN BOOLEAN MODE) AND organizer_id = ?2 AND takes_place_on_utc >= CURRENT_DATE",
             nativeQuery = true)
     Page<Event> organizerFullTextSearch(String keyword, int organizerId, Pageable pageable);
 
